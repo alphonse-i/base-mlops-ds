@@ -4,7 +4,7 @@ FROM pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime
 WORKDIR /app
 
 # Installation de Poetry
-RUN pip install --no-cache-dir poetry==1.8.0
+RUN pip install --no-cache-dir poetry==2.2.1
 
 # Copie des fichiers de configuration du package
 COPY pyproject.toml poetry.lock* ./

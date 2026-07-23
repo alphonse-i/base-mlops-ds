@@ -1,0 +1,32 @@
+# MLOps_DS/pyproject.toml
+
+[tool.poetry]
+name = "MLOps_DS"
+version = "1.0.0"
+description = "Framework MLOps standardisé pour la classification et la détection"
+authors = ["MLOps Team"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+# --- Dépendances Core & MLOps ---
+picsellia = "==6.29.0"  # Fixé à la même version que ton environnement Airflow
+pydantic = "^2.0.0"     # Pour la validation stricte des fichiers de configuration
+pyyaml = "^6.0"         # Pour la lecture des fichiers .yaml
+
+# --- Dépendances Machine Learning ---
+# PyTorch est généralement inclus dans l'image de base (pytorch/pytorch:2.2.0-cuda12.1),
+# mais il est de bonne pratique de le déclarer.
+torch = "^2.2.0"
+torchvision = "^0.17.0"
+ultralytics = "^8.1.0"  # Pour l'entraînement et l'inférence YOLOv8
+
+# Dépendances dédiées uniquement aux tests et au développement
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

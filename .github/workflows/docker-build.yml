@@ -1,7 +1,5 @@
 name: Build and Push MLOps Docker Image
 
-# Le workflow se déclenche uniquement si on push sur "main"
-# ET que les fichiers dans le nouveau dossier "ml_pipeline" ont été modifiés.
 on:
   push:
     branches: [ "main" ]
@@ -9,39 +7,59 @@ on:
       - 'ml/**'
 
 jobs:
+  # --- NOUVEAU JOB : TESTS UNITAIRES ---
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install Poetry
+        run: pip install poetry==2.2.1
+
+      - name: Install dependencies
+        working-directory: ./ml
+        run: poetry install --no-interaction
+
+      - name: Run Pytest
+        working-directory: ./ml
+        # On exécute pytest dans le dossier /tests
+        run: poetry run pytest tests/
+
+  # --- TON JOB ACTUEL DE BUILD ---
   build:
+    name: Build and Push Docker Image
+    needs: test # CRÉCIAL : Ce job attend que le job "test" soit validé !
     runs-on: ubuntu-latest
 
     steps:
-      - name: Récupération du code (Checkout)
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Connexion au registre Docker (Docker Hub ou Registre Privé)
+      - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build et Push de l'image
+      - name: Build and Push Docker Image
         uses: docker/build-push-action@v4
         with:
           context: ./ml
           push: true
-          # NOUVEAU : Nom de l'image plus générique (agnostique au modèle)
-          tags: ${{ secrets.DOCKER_USERNAME }}/helmet-detection-model:${{ github.sha }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/mlops-framework:${{ github.sha }}
 
-      # --- ÉTAPE GITOPS ---
-      # Faire communiquer l'IC github(internet) avec Airflow(local)
-      - name: Mise à jour du tag pour Airflow
+      - name: Update GitOps Tag for Airflow
         run: |
-          # 1. On écrit le nom complet de la nouvelle image dans le fichier texte
           echo "${{ secrets.DOCKER_USERNAME }}/mlops-framework:${{ github.sha }}" > dags/scripts/image_version.txt
-          
-          # 2. On configure le robot Git
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "actions@github.com"
-          
-          # 3. On valide et on pousse le changement sur le dépôt
           git add dags/scripts/image_version.txt
-          git commit -m "🤖 Mise à jour automatique de l'image Docker vers le commit ${{ github.sha }}"
+          git commit -m "🤖 GitOps: Update Docker image tag to ${{ github.sha }}"
           git push
