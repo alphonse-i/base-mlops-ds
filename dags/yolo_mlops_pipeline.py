@@ -18,7 +18,7 @@ default_args = {
 
 # 2. Instanciation du DAG (Le Pipeline YOLO)
 with DAG(
-    'picsellia_yolo_detection_pipeline',
+    'yolo_detection_pipeline',
     default_args=default_args,
     description='Pipeline MLOps : Ingestion YOLO et Déclenchement Picsellia via config YAML',
     schedule_interval='@weekly', # Tourne une fois par semaine

@@ -18,7 +18,7 @@ default_args = {
 
 # 2. Instanciation du DAG (Le Pipeline)
 with DAG(
-    'picsellia_retail_alcohol_pipeline',
+    'pytorch_classification_pipeline',
     default_args=default_args,
     description='Pipeline MLOps : Ingestion QNAP et Déclenchement Picsellia via config YAML',
     schedule_interval='@weekly', # Tourne une fois par semaine
