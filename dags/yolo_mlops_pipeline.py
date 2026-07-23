@@ -35,7 +35,7 @@ with DAG(
 
     # 4. TÂCHE 2 : Le Déclenchement de l'entraînement
     trigger_task = PythonOperator(
-        task_id='trigger_myoboku_yolo_training',
+        task_id='trigger_yolo_training',
         python_callable=trigger_training,
         # On utilise XCom pour récupérer l'ID retourné par la Tâche 1
         op_kwargs={
