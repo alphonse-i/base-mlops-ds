@@ -9,7 +9,7 @@ readme = "README.md"
 package-mode = false
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = ">=3.12,<3.15"
 
 # --- Dépendances Core & MLOps ---
 picsellia = "==6.29.0"  # Fixé à la même version que ton environnement Airflow
@@ -30,3 +30,8 @@ pytest = "^8.0.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "."
+]
