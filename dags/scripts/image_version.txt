@@ -1,1 +1,1 @@
-alphonseing/mlops-framework:fdfcb5731a71f268f1e3f2cd55b5fa71675dc804
+alphonseing/mlops-framework:5e12f7f53c1cc5453b77d05c6a0728ef17dc1a04
