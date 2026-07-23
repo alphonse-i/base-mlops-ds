@@ -1,1 +1,1 @@
-alphonseing/retail-alcohol-model:15bc2fad6f3a89a4f18cda55bd61fdc5444ad158
+alphonseing/mlops-framework:d27a0dd7dc9d1b67625feb45cf4fb4642dd0e78d
