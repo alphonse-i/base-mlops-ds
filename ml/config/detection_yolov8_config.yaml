@@ -1,0 +1,24 @@
+# config/detection_yolov8_config.yaml
+
+### Rôle :
+# Centraliser tous les paramètres du run. Ce fichier sera passé en argument lors du lancement du conteneur. 
+# Si tu veux lancer le modèle de classification ResNeXt demain, 
+# tu créeras simplement un classification_resnext_config.yaml sans toucher au code Python.
+
+task: "detection"
+framework: "yolo"
+model_name: "yolov8s.pt"
+
+tracking:
+  # Peut être "picsellia" (utilise l'API) ou "local" (utilise TensorBoard/fichiers locaux)
+  mode: "picsellia" 
+
+data:
+  # Chemin de repli si le mode de tracking est "local" et qu'on ne télécharge pas depuis Picsellia
+  local_path: "/opt/airflow/datasets/detection"
+
+hyperparameters:
+  # Paramètres extraits de ton notebook YOLOv8
+  epochs: 20
+  batch_size: 16
+  imgsz: 640

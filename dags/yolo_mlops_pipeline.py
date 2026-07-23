@@ -1,0 +1,48 @@
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+from datetime import datetime, timedelta
+
+# Import de tes scripts (assure-toi qu'ils sont dans le PYTHONPATH d'Airflow)
+from scripts.yolo_ingestion import ingest_detection_dataset
+from scripts.trigger import trigger_training
+
+# 1. Définition des paramètres par défaut du pipeline
+default_args = {
+    'owner': 'mlops-team',
+    'depends_on_past': False,
+    'start_date': datetime(2026, 1, 1),
+    'email_on_failure': False,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
+}
+
+# 2. Instanciation du DAG (Le Pipeline YOLO)
+with DAG(
+    'picsellia_yolo_detection_pipeline',
+    default_args=default_args,
+    description='Pipeline MLOps : Ingestion YOLO et Déclenchement Picsellia via config YAML',
+    schedule_interval='@weekly', # Tourne une fois par semaine
+    catchup=False,
+) as dag:
+
+    # 3. TÂCHE 1 : L'Ingestion
+    # La variable AIRFLOW_CTX_DAG_RUN_ID est générée automatiquement par Airflow
+    ingestion_task = PythonOperator(
+        task_id='ingest_yolo_data_from_local',
+        python_callable=ingest_detection_dataset,
+    )
+
+    # 4. TÂCHE 2 : Le Déclenchement de l'entraînement
+    trigger_task = PythonOperator(
+        task_id='trigger_myoboku_yolo_training',
+        python_callable=trigger_training,
+        # On utilise XCom pour récupérer l'ID retourné par la Tâche 1
+        op_kwargs={
+            'dataset_version_id': "{{ ti.xcom_pull(task_ids='ingest_yolo_data_from_local') }}",
+            # NOUVEAU : Injection du fichier de configuration YAML pour YOLOv8
+            'config_file_path': 'config/detection_yolov8_config.yaml'
+        }
+    )
+
+    # 5. Définition de l'ordre d'exécution (Tâche 1 PUIS Tâche 2)
+    ingestion_task >> trigger_task

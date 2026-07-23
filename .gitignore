@@ -1,0 +1,32 @@
+# --- SÉCURITÉ (Le plus important) ---
+.env
+*.pem
+*.key
+
+# --- AIRFLOW (Fichiers générés localement) ---
+logs/
+plugins/
+airflow.cfg
+webserver_config.py
+airflow.db
+
+# --- PYTHON ---
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+.venv/
+
+# --- SYSTÈME D'EXPLOITATION ---
+.DS_Store
+Thumbs.db
+
+# --- MACHINE LEARNING (Données locales) ---
+# Empêche de pousser des images ou des modèles lourds par erreur
+data/
+*.pth
+*.pt
+*.h5
+
+# --- IGNORER LA DATASET ---
+datasets/
