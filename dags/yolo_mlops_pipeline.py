@@ -8,7 +8,7 @@ from scripts.trigger import trigger_training
 
 # 1. Définition des paramètres par défaut du pipeline
 default_args = {
-    'owner': 'mlops-team',
+    'owner': 'ds-team',
     'depends_on_past': False,
     'start_date': datetime(2026, 1, 1),
     'email_on_failure': False,
@@ -21,7 +21,8 @@ with DAG(
     'yolo_detection_pipeline',
     default_args=default_args,
     description='Pipeline MLOps : Ingestion YOLO et Déclenchement Picsellia via config YAML',
-    schedule_interval='@weekly', # Tourne une fois par semaine
+    #schedule_interval='@weekly', # Tourne une fois par semaine
+    schedule_interval=None,
     catchup=False,
 ) as dag:
 

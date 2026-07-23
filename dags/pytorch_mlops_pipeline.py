@@ -21,7 +21,8 @@ with DAG(
     'pytorch_classification_pipeline',
     default_args=default_args,
     description='Pipeline MLOps : Ingestion QNAP et Déclenchement Picsellia via config YAML',
-    schedule_interval='@weekly', # Tourne une fois par semaine
+    #schedule_interval='@weekly', # Tourne une fois par semaine
+    schedule_interval=None,
     catchup=False,
 ) as dag:
 

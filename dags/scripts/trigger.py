@@ -17,9 +17,9 @@ def trigger_training(**kwargs):
     # --- 2. CONFIGURATION PICSELLIA ---
     api_token = os.environ.get("PICSELLIA_API_TOKEN")
     organization_name = os.environ.get("PICSELLIA_ORG_NAME")
-    
+    project_name = os.environ.get("PICSELLIA_PROJECT_NAME", "helmet-mlops-ds")
     client = Client(api_token=api_token, organization_name=organization_name)
-    project = client.get_project("Retail_Alcohol_Detection")
+    project = client.get_project(project_name)
 
     # --- 3. LECTURE DU TAG DOCKER (MÉTHODE GITOPS) ---
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -38,7 +38,7 @@ def trigger_training(**kwargs):
     experiment_name = f"Auto-Pipeline-Run-{run_id}"
     experiment = project.create_experiment(name=experiment_name)
     # Dans le cas où on cible spécifiquement le DGX Spark ! on le commente si on utilise le compute picsellia
-    experiment.attach_compute_block("dgx-spark-cluster")
+    # experiment.attach_compute_block("dgx-spark-cluster")
     print(f"Création de l'expérience '{experiment_name}' (ID: {experiment.id}).")
 
     # --- 5. ATTACHEMENT DU LIVRABLE DATA ---

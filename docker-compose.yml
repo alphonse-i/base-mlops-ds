@@ -11,6 +11,7 @@ x-airflow-common:
     _PIP_ADDITIONAL_REQUIREMENTS: picsellia==6.29.0
     PICSELLIA_API_TOKEN: ${PICSELLIA_API_TOKEN}
     PICSELLIA_ORG_NAME: ${PICSELLIA_ORG_NAME}
+    PICSELLIA_PROJECT_NAME: ${PICSELLIA_PROJECT_NAME}
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs

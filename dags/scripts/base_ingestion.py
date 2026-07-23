@@ -1,5 +1,6 @@
 """
-
+Ce script centralise 
+toute la communication de base avec Picsellia.
 
 """
 
