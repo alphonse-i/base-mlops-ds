@@ -1,19 +1,20 @@
-# MLOps_DS/Dockerfile
-FROM pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime
+FROM python:3.12-slim
 
 WORKDIR /app
 
-# Installation de Poetry
+# Installation des dépendances système (OpenCV)
+RUN apt-get update && apt-get install -y \
+    libgl1 \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN pip install --no-cache-dir poetry==2.2.1
 
-# Copie des fichiers de configuration du package
 COPY pyproject.toml poetry.lock* ./
 
-# Installation des dépendances du projet
 RUN poetry config virtualenvs.create false \
-    && poetry install --no-interaction --no-ansi
+    && poetry install --no-interaction --no-ansi --without dev
 
-# Copie du code métier
 COPY src/ /app/src/
 COPY config/ /app/config/
 
